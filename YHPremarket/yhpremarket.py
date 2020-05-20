@@ -59,8 +59,9 @@ def yhparse_one(ticker, verbose=False, sleep=None):
         except:
             closetime = None
         if closetime is not None and closetime != '':
-            closetime = closetime.replace("At close:  ", '').replace(" EDT", '').replace(" EST", '')
-            closetime = gsub_one('(.* )?([0-9]+:[0-9]+[APM]+)', '\\2', closetime)
+            closetime0 = closetime.replace("At close:  ", '').replace(" EDT", '').replace(" EST", '').replace(". Market open.", '')
+            closetime = gsub_one('(.* )?([0-9]+:[0-9]+[APM]+)(.*)?', '\\2', closetime0)
+            closetime2 = gsub_one('(.* )?([0-9]+:[0-9]+[APM]+)(.*)?', '\\1', closetime0)
             aa = dt.datetime.strptime(closetime, '%H:%M%p')
             atoday = dt.datetime.today()
             atoday.replace(hour=aa.hour, minute=aa.minute, second=0, microsecond=0)
@@ -108,7 +109,9 @@ def yhparse_one(ticker, verbose=False, sleep=None):
     if is_premarket:
         # use the sraper's datetime stamp.
         nowtime = pretime
-    d = pd.DataFrame({'ticker': [ticker], 'date': [nowdate], 'datetime': [nowtime],
+    d = pd.DataFrame({'ticker': [ticker],
+                      'date': [nowdate],
+                      'datetime': [nowtime],
                       'closeprice': [closeprice],
                       'realtimeprice': [afterhourprice],
                       'datatype': [datatype]})
