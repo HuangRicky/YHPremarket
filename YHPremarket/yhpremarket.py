@@ -39,7 +39,11 @@ def yhparse_one(ticker, verbose=False, sleep=None):
     # company_json = {}
 
     closepricespanclass = 'Trsdu(0.3s) Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(b)'
-    afterhoursspanclass = 'C(black) Fz(14px) Fw(500)'
+    afterhoursspanclasses = ['C($primaryColor) Fz(14px) Fw(500)', 'C(black) Fz(14px) Fw(500)']
+    # 6/4 they changed:
+    # C($primaryColor) Fz(24px) Fw(b)
+    # C($primaryColor) Fz(14px) Fw(500)
+
     closepricecnt = 0
     afterhourspricecnt = 0
     closeprice = None
@@ -69,7 +73,15 @@ def yhparse_one(ticker, verbose=False, sleep=None):
 
     # this is to find the premarket or afterhours price.
     is_premarket = False
-    for span in soup.findAll('span', attrs={'class': afterhoursspanclass}):
+
+    correct_after_i = 0
+    for after_i, after_s in enumerate(afterhoursspanclasses):
+        if len(soup.findAll('span', attrs={'class': after_s})) > 0:
+            # bingo, find it.
+            correct_after_i = after_i
+            break
+
+    for span in soup.findAll('span', attrs={'class': afterhoursspanclasses[correct_after_i]}):
         afterhourprice = float(span.text.strip().replace(',', ''))
 
         afterhourspricecnt += 1
