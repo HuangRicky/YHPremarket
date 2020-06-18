@@ -89,7 +89,7 @@ def yhparse_one(ticker, verbose=False, sleep=None):
             ispre = span.next_sibling.next_sibling.next_sibling.next_sibling.next_sibling.next_sibling.next_element.next_element
         except:
             ispre = None
-        if ispre == 'Pre-Market:':
+        if ispre in ['Pre-Market:', 'Before hours:']:
             is_premarket = True
         try:
             pretime = span.next_sibling.next_sibling.next_sibling.next_sibling.next_sibling.next_sibling.next_element.next_element.next_element.next_element.next_element.next_element.next_element
