@@ -5,6 +5,10 @@ from urllib.request import Request, urlopen
 import time
 import datetime as dt
 import re
+# from loguru import logger
+import logging
+
+logger = logging.getLogger('YHPremarket')
 
 
 __all__ = ['yhparse_many', 'yhparse_one']
@@ -19,8 +23,9 @@ def yhparse_one(ticker, verbose=False, sleep=None):
     """
     # get idea from:
     # https://www.promptcloud.com/blog/how-to-scrape-yahoo-finance-data-using-python/
-    if verbose:
-        print(" *** Yahoo Parsing ticker {0}".format(ticker), flush=True)
+    # if verbose:
+    #     print(" *** Yahoo Parsing ticker {0}".format(ticker), flush=True)
+    logger.info(" *** Yahoo Parsing ticker {0}".format(ticker))
     url = "https://finance.yahoo.com/quote/%s?p=%s" % (ticker, ticker)
     # For ignoring SSL certificate errors
     ctx = ssl.create_default_context()
@@ -104,8 +109,9 @@ def yhparse_one(ticker, verbose=False, sleep=None):
 
     if not (closepricecnt == 1 and afterhourspricecnt <= 1):
         # something wrong.
-        if verbose:
-            print("Something wrong with this ticker {0}, return nothing".format(ticker), flush=True)
+        # if verbose:
+        #     print("Something wrong with this ticker {0}, return nothing".format(ticker), flush=True)
+        logger.warning("Something wrong with this ticker {0}, return nothing".format(ticker))
         return None
     if closepricecnt == 1 and afterhourspricecnt == 0:
         datatype = 'marketopen'
@@ -158,6 +164,10 @@ def gsub_one(pattern, replacement, s, count=0, ignorecase=False):
 if __name__ == '__main__':
     # d = yhparse_one("SPY")
     # print(d)
-
+    # logger.add('file.log')
+    logger = logging.getLogger("YHPremarket")
+    logger.setLevel(logging.INFO)
+    fh = logging.FileHandler("file2.log")
+    logger.addHandler(fh)
     d2 = yhparse_many(['SPY', 'USO', 'GOOG', 'AAPL'], verbose=True)
     print(d2)

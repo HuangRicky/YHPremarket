@@ -14,7 +14,7 @@ setup(
     packages=find_packages(include=['YHPremarket']),
     install_requires=['pandas', 'requests', 'bs4'],
     # package_data={'YHPremarket': ['data/*']},
-    url='http://github.com',
+    url='https://github.com/HuangRicky/YHPremarket',
     license='MIT',
     author='Ruokun Huang',
     author_email='hruokun.2008@gmail.com',
